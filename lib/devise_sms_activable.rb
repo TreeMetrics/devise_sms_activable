@@ -1,12 +1,6 @@
-require "devise"
-
-$: << File.expand_path("..", __FILE__)
-
-require "devise_sms_activable/routes"
-require "devise_sms_activable/schema"
-require 'devise_sms_activable/controllers/url_helpers'
-require 'devise_sms_activable/controllers/helpers'
-require 'devise_sms_activable/rails'
+require 'active_record'
+require 'active_support/concern'
+require 'devise'
 
 module Devise
   mattr_accessor :sms_confirm_within
@@ -24,7 +18,24 @@ module Devise
     @@sms_sender_ref = ref(class_name)
   end
 
-  self.sms_sender = "Devise::SmsSender"
+  self.sms_sender = 'Devise::SmsSender'
 end
 
-Devise.add_module :sms_activable, :model => "models/sms_activable", :controller => :sms_activations, :route => :sms_activation
+module DeviseSmsActivable
+  autoload :Schema, 'devise_sms_activable/schema'
+
+  module Controllers
+    autoload :Helpers, 'devise_sms_activable/controllers/helpers'
+    autoload :UrlHelpers, 'devise_sms_activable/controllers/url_helpers'
+  end
+end
+
+Devise.add_module :sms_activable,
+                  model: 'devise_sms_activable/models/sms_activable',
+                  controller: :sms_activations,
+                  route: :sms_activation
+
+# Requires
+require 'devise_sms_activable/routes'
+require 'devise_sms_activable/rails'
+require 'devise_sms_activable/models/sms_activable'

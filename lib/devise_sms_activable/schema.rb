@@ -1,6 +1,5 @@
 module DeviseSmsActivable
   module Schema
-  
     def sms_activable
       apply_devise_schema :phone,   String
       apply_devise_schema :sms_confirmation_token,   String, :limit => 5
