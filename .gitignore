@@ -13,7 +13,7 @@ doc
 
 # jeweler generated
 pkg
-
+.idea/**
 # gem generated
 *.gem
 

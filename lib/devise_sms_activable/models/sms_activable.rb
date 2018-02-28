@@ -51,9 +51,9 @@ module Devise
 
       # Send confirmation token by sms
       def send_sms_token
-        if(self.phone?)
+        if self.class.sms_model_attribute
           generate_sms_token! if self.sms_confirmation_token.nil?
-          ::Devise.sms_sender.send_sms(self.phone, I18n.t(:"devise.sms_activations.sms_body", :sms_confirmation_token => self.sms_confirmation_token, :default => self.sms_confirmation_token))
+          ::Devise.sms_sender.send_sms(self.class.sms_model_attribute, I18n.t(:"devise.sms_activations.sms_body", :sms_confirmation_token => self.sms_confirmation_token, :default => self.sms_confirmation_token))
         else
           self.class.sms_confirmation_keys.each do |key|
             self.errors.add(key, :no_phone_associated)
@@ -178,7 +178,7 @@ module Devise
             generate_small_token(:sms_confirmation_token)
           end
 
-          Devise::Models.config(self, :sms_confirm_within, :sms_confirmation_keys)
+          Devise::Models.config(self, :sms_confirm_within, :sms_confirmation_keys, :sms_model_attribute)
         end
     end
   end
