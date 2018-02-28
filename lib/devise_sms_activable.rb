@@ -13,6 +13,8 @@ module Devise
   @@sms_confirm_within = 2.days
   mattr_accessor :sms_confirmation_keys
   @@sms_confirmation_keys = [:email]
+  mattr_accessor :sms_model_attribute
+  @@sms_model_attribute = 'phone'
 
   # Get the sms sender class from the mailer reference object.
   def self.sms_sender
