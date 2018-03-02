@@ -1,7 +1,7 @@
 class DeviseSmsActivableAddTo<%= table_name.camelize %> < ActiveRecord::Migration
   def self.up
     change_table :<%= table_name %> do |t|
-      t.string   @@sms_model_attribute
+      t.string   @@sms_model_attribute.to_sym
       t.string   :sms_confirmation_token, :limit => 5
       t.datetime :confirmation_sms_sent_at
       t.datetime :sms_confirmed_at
