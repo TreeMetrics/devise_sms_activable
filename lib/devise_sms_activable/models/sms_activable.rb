@@ -166,6 +166,7 @@ module Devise
           # Generates a small token that can be used conveniently on SMS's.
 
           def generate_small_token(column)
+            return 'qqqqqq' if prevent_sms_sending_on_debug && (Rails.env.development? || Rails.env.test?)
             loop do
               symbols = sms_code_symbols
               code = 6.times.map { symbols.sample }
@@ -178,7 +179,7 @@ module Devise
             generate_small_token(:sms_confirmation_token)
           end
 
-          Devise::Models.config(self, :sms_confirm_within, :sms_confirmation_keys, :sms_model_attribute, :sms_code_symbols)
+          Devise::Models.config(self, :sms_confirm_within, :sms_confirmation_keys, :sms_model_attribute, :sms_code_symbols, :prevent_sms_sending_on_debug)
         end
     end
   end

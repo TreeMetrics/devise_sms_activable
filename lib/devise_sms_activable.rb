@@ -11,6 +11,8 @@ module Devise
   @@sms_model_attribute = 'phone'
   mattr_accessor :sms_code_symbols
   @@sms_code_symbols = (0..9).to_a
+  mattr_accessor :prevent_sms_sending_on_debug
+  @@prevent_sms_sending_on_debug = true
 
   # Get the sms sender class from the mailer reference object.
   def self.sms_sender
