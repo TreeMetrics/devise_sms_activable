@@ -50,10 +50,13 @@ module Devise
       end
 
       # Send confirmation token by sms
-      def send_sms_token
+      def send_sms_token(to_phone_number = nil)
         if self.send(self.class.sms_model_attribute.to_sym)
           generate_sms_token! if self.sms_confirmation_token.nil?
-          ::Devise.sms_sender.send_sms(self.send(self.class.sms_model_attribute.to_sym), I18n.t("devise.sms_activations.sms_body", sms_confirmation_token: self.sms_confirmation_token, default: self.sms_confirmation_token))
+          ::Devise.sms_sender.send_sms(to_phone_number || self.send(self.class.sms_model_attribute.to_sym),
+            I18n.t("devise.sms_activations.sms_body",
+              sms_confirmation_token: self.sms_confirmation_token,
+              default: self.sms_confirmation_token))
         else
           self.class.sms_confirmation_keys.each do |key|
             self.errors.add(key, :no_phone_associated)
