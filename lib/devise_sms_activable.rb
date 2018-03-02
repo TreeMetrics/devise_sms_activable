@@ -9,6 +9,8 @@ module Devise
   @@sms_confirmation_keys = [:email]
   mattr_accessor :sms_model_attribute
   @@sms_model_attribute = 'phone'
+  mattr_accessor :sms_code_symbols
+  @@sms_code_symbols = (0..9).to_a
 
   # Get the sms sender class from the mailer reference object.
   def self.sms_sender

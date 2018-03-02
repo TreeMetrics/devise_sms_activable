@@ -53,7 +53,7 @@ module Devise
       def send_sms_token
         if self.send(self.class.sms_model_attribute.to_sym)
           generate_sms_token! if self.sms_confirmation_token.nil?
-          ::Devise.sms_sender.send_sms(self.send(self.class.sms_model_attribute.to_sym), I18n.t(:"devise.sms_activations.sms_body", :sms_confirmation_token => self.sms_confirmation_token, :default => self.sms_confirmation_token))
+          ::Devise.sms_sender.send_sms(self.send(self.class.sms_model_attribute.to_sym), I18n.t("devise.sms_activations.sms_body", sms_confirmation_token: self.sms_confirmation_token, default: self.sms_confirmation_token))
         else
           self.class.sms_confirmation_keys.each do |key|
             self.errors.add(key, :no_phone_associated)
@@ -164,12 +164,12 @@ module Devise
           end
 
           # Generates a small token that can be used conveniently on SMS's.
-          # The token is 5 chars long and uppercased.
 
           def generate_small_token(column)
             loop do
-              token = Devise.friendly_token[0,5].upcase
-              break token unless to_adapter.find_first({ column => token })
+              symbols = sms_code_symbols
+              code = 6.times.map { symbols.sample }
+              break code.shuffle.join unless to_adapter.find_first({ column => code })
             end
           end
 
@@ -178,7 +178,7 @@ module Devise
             generate_small_token(:sms_confirmation_token)
           end
 
-          Devise::Models.config(self, :sms_confirm_within, :sms_confirmation_keys, :sms_model_attribute)
+          Devise::Models.config(self, :sms_confirm_within, :sms_confirmation_keys, :sms_model_attribute, :sms_code_symbols)
         end
     end
   end

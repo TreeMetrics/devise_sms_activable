@@ -26,6 +26,7 @@ module DeviseSmsActivable
   # The keys searched for confirmation values.
   # config.sms_confirmation_keys = [:email]
   # config.sms_model_attribute = "phone"
+  # config.sms_code_symbols = (0..9).to_a
   
   # Your SmsSender class. The provided one uses 
   # moonshado-sms gem so install it and configure
