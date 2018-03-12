@@ -51,17 +51,19 @@ module Devise
 
       # Send confirmation token by sms
       def send_sms_token(to_phone_number = nil)
-        if self.send(self.class.sms_model_attribute.to_sym)
-          generate_sms_token! if self.sms_confirmation_token.nil?
-          ::Devise.sms_sender.send_sms(to_phone_number || self.send(self.class.sms_model_attribute.to_sym),
-            I18n.t("devise.sms_activations.sms_body",
-              sms_confirmation_token: self.sms_confirmation_token,
-              default: self.sms_confirmation_token))
-        else
-          self.class.sms_confirmation_keys.each do |key|
-            self.errors.add(key, :no_phone_associated)
+        unless prevent_sms_sending
+          if self.send(self.class.sms_model_attribute.to_sym)
+            generate_sms_token! if self.sms_confirmation_token.nil?
+            ::Devise.sms_sender.send_sms(to_phone_number || self.send(self.class.sms_model_attribute.to_sym),
+              I18n.t("devise.sms_activations.sms_body",
+                sms_confirmation_token: self.sms_confirmation_token,
+                default: self.sms_confirmation_token))
+          else
+            self.class.sms_confirmation_keys.each do |key|
+              self.errors.add(key, :no_phone_associated)
+            end
+            false
           end
-          false
         end
       end
 
@@ -169,7 +171,7 @@ module Devise
           # Generates a small token that can be used conveniently on SMS's.
 
           def generate_small_token(column)
-            return 'qqqqqq' if prevent_sms_sending_on_debug && (Rails.env.development? || Rails.env.test?)
+            return use_predefined_sms_code if use_predefined_sms_code.present?
             loop do
               symbols = sms_code_symbols
               code = 6.times.map { symbols.sample }
@@ -182,7 +184,7 @@ module Devise
             generate_small_token(:sms_confirmation_token)
           end
 
-          Devise::Models.config(self, :sms_confirm_within, :sms_confirmation_keys, :sms_model_attribute, :sms_code_symbols, :prevent_sms_sending_on_debug)
+          Devise::Models.config(self, :sms_confirm_within, :sms_confirmation_keys, :sms_model_attribute, :sms_code_symbols, :prevent_sms_sending, :use_predefined_sms_code)
         end
     end
   end
