@@ -172,10 +172,10 @@ module Devise
 
           def generate_small_token(column)
             return use_predefined_sms_code if use_predefined_sms_code.present?
-            return sms_confirmation_token if sms_confirmation_token.present? && Time.now - confirmation_sms_sent_at < confirmation_code_expiration_time
+            return sms_confirmation_token if sms_confirmation_token.present? && Time.current - confirmation_sms_sent_at < confirmation_code_expiration_time
             loop do
               symbols = sms_code_symbols
-              code = 6.times.map { symbols.sample }
+              code = sms_code_length.times.map { symbols.sample }
               break code.shuffle.join unless to_adapter.find_first({ column => code })
             end
           end
@@ -185,7 +185,7 @@ module Devise
             generate_small_token(:sms_confirmation_token)
           end
 
-          Devise::Models.config(self, :sms_confirm_within, :sms_confirmation_keys, :sms_model_attribute, :sms_code_symbols, :prevent_sms_sending, :use_predefined_sms_code, :confirmation_code_expiration_time)
+          Devise::Models.config(self, :sms_confirm_within, :sms_confirmation_keys, :sms_model_attribute, :sms_code_symbols, :prevent_sms_sending, :use_predefined_sms_code, :confirmation_code_expiration_time, :sms_code_length)
         end
     end
   end

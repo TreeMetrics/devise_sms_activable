@@ -17,6 +17,8 @@ module Devise
   @@use_predefined_sms_code = nil
   mattr_accessor :confirmation_code_expiration_time
   @@confirmation_code_expiration_time = 3.minutes
+  mattr_accessor :sms_code_length
+  @@sms_code_length = 6
 
   # Get the sms sender class from the mailer reference object.
   def self.sms_sender
