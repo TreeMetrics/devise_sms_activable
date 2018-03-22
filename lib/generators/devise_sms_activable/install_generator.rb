@@ -30,6 +30,7 @@ module DeviseSmsActivable
   # config.prevent_sms_sending = false
   # Key use_predefined_sms_code set code that will send to all users and generate random by default.
   # config.use_predefined_sms_code = nil
+  # config.confirmation_code_expiration_time = 3.minutes
   
   # Your SmsSender class. The provided one uses 
   # moonshado-sms gem so install it and configure
