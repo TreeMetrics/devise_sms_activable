@@ -51,7 +51,7 @@ module Devise
 
       # Send confirmation token by sms
       def send_sms_token(to_phone_number = nil)
-        unless prevent_sms_sending
+        unless self.class.prevent_sms_sending
           if self.send(self.class.sms_model_attribute.to_sym)
             generate_sms_token! if self.sms_confirmation_token.nil?
             ::Devise.sms_sender.send_sms(to_phone_number || self.send(self.class.sms_model_attribute.to_sym),
