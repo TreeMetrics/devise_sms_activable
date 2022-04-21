@@ -11,7 +11,7 @@ class Devise::SmsActivationsController < DeviseController
     yield resource if block_given?
 
     if resource.errors.empty?
-      set_flash_message :notice, :send_token, self.resource.class.sms_model_attribute => self.resource.send(self.resource.class.sms_model_attribute.to_sym) if is_flashing_format?
+      set_flash_message :notice, :send_token, self.resource.class.sms_model_attribute.to_sym => self.resource.send(self.resource.class.sms_model_attribute.to_sym) if is_flashing_format?
       respond_with({}, location: after_resending_sms_token_path_for(resource_name))
     else
       respond_with(resource)
