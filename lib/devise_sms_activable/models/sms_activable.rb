@@ -175,7 +175,8 @@ module Devise
             loop do
               symbols = sms_code_symbols
               code = sms_code_length.times.map { symbols.sample }
-              break code.shuffle.join unless to_adapter.find_first({ column => code })
+              joined_code = code.shuffle.join
+              break joined_code unless to_adapter.find_first({ column => joined_code })
             end
           end
 
